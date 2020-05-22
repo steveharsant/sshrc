@@ -13,13 +13,17 @@
 # Enable debug messages
 enable_debug=0
 
-host=$1
-
 debug() {
   if [[ $enable_debug == 1 ]]; then
     printf "$1\n"
   fi
 }
+
+host=$1
+if [[ -z $host ]]; then
+  ssh
+  exit 0
+fi
 
 script_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 files_list="${HOME}/.sshrc_files"
@@ -50,7 +54,7 @@ files=$(cat "${HOME}/.sshrc_files")
 for file in $files; do
   if [[ -f $file ]]; then
     debug "Copying $file over scp to $host:/tmp/"
-    scp "$file" "$host":/tmp/
+    scp -q "$file" "$host":/tmp/
   fi
 done
 
