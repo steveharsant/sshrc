@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # sshrc
-# version: 0.1.0
+# version: 0.2.0
 # Author: Steve Harsant
 
 # Set liniting rules
@@ -11,7 +11,7 @@
 # shellcheck disable=SC2164
 
 # Enable debug messages
-enable_debug=0
+enable_debug=1
 
 debug() {
   if [[ $enable_debug == 1 ]]; then
@@ -19,10 +19,25 @@ debug() {
   fi
 }
 
+# If no arguments are passed, execute ssh with no arguments and exit
 host=$1
 if [[ -z $host ]]; then
   ssh
   exit 0
+fi
+
+# If the .sshrc_ignoredhosts file exists in the home directory and the hostname/ip
+# matchces the $host to connect to, then do not copy rc files. Useful for ssh with mfa
+ignored_hosts_list="${HOME}/.sshrc_ignoredhosts"
+if [[ -f "$ignored_hosts_list" ]]; then
+  ignored_hosts=$(cat "${ignored_hosts_list}")
+
+  for ignored in $ignored_hosts; do
+    if [[ $host == *$ignored* ]]; then
+      ssh "$host"
+      exit 0
+    fi
+  done
 fi
 
 script_location="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -50,7 +65,7 @@ else
   exit 1
 fi
 
-files=$(cat "${HOME}/.sshrc_files")
+files=$(cat "${files_list}")
 for file in $files; do
   if [[ -f $file ]]; then
     debug "Copying $file over scp to $host:/tmp/"
