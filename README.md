@@ -20,6 +20,10 @@ An simple ssh wrapper to copy rc files to /tmp and source them as the connection
 - Run with `sshrc` (or `/path/to/sshrc.sh` if not installed to `/usr/bin`)
 - First run prompts to install `~/.sshrc_files`. Populate this file with a list of file paths to be copied to remote hosts. If there is more than just the `.bashrc` file being copied, ensure the `.bashrc` file _sources_ the other files using relative paths.
 
+### Note
+
+the `.sshrc_files` file contains [my personal set of `dotfiles`](https://github.com/steveharsant/dotfiles). Replace entires in this file as required.
+
 ### Debugging
 
 To enable debugging, set the `enable_debug` variable (found at the top of the script) to `1`
