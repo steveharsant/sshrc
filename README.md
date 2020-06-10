@@ -10,6 +10,7 @@ An simple ssh wrapper to copy rc files to /tmp and source them as the connection
 - Only affects the session that `sshrc` initiates. Others are not affected.
 - `rc` files are stored in `/tmp` so therefore are not permanent.
 - Hash matching, so only newer/updated/missing `rc` files are copied, increasing connection speed.
+- Debugging option
 
 ## Usage
 
@@ -18,6 +19,10 @@ An simple ssh wrapper to copy rc files to /tmp and source them as the connection
 - (Optional but recommended) Symlink to user binaries path with `sudo ln -s /path/to/sshrc.sh /usr/bin/sshrc`
 - Run with `sshrc` (or `/path/to/sshrc.sh` if not installed to `/usr/bin`)
 - First run prompts to install `~/.sshrc_files`. Populate this file with a list of file paths to be copied to remote hosts. If there is more than just the `.bashrc` file being copied, ensure the `.bashrc` file _sources_ the other files using relative paths.
+
+### Debugging
+
+To enable debugging, set the `enable_debug` variable (found at the top of the script) to `1`
 
 ## TODO
 
