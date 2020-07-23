@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 #
 # sshrc
-# version: 0.3.0
+# version: 0.3.1
 # Author: Steve Harsant
 
 # Set liniting rules
+# shellcheck disable=SC2029
+# shellcheck disable=SC2046
 # shellcheck disable=SC2059
 # shellcheck disable=SC2091
 # shellcheck disable=SC2162
 # shellcheck disable=SC2164
-# shellcheck disable=SC2029
 
 # Enable debug messages
-enable_debug=0
+enable_debug=1
 
 debug() {
   if [[ $enable_debug == 1 ]]; then
@@ -73,10 +74,10 @@ files=$(cat "${files_list}")
 for file in $files; do
   if [[ -f $file ]]; then
     local_file_hash=$(md5sum "$file" | awk '{ print $1 }')
-    remote_file_hash=$(ssh "$host" "md5sum /tmp/$(basename "$file")" | awk '{ print $1 }')
+    remote_file_hash=$(ssh "$host" "if [[ -f "/tmp/$(basename "$file")" ]]; then md5sum /tmp/$(basename "$file"); fi" | awk '{ print $1 }')
 
     if [[ "$local_file_hash" == "$remote_file_hash" ]]; then
-      debug "local rc file hash matches remote, nothing to copy"
+      debug "local rc file $file hash matches remote, nothing to copy"
     else
       debug "Local  hash $local_file_hash"
       debug "Remote hash $remote_file_hash"
