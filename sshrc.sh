@@ -13,7 +13,7 @@
 # shellcheck disable=SC2164
 
 # Enable debug messages
-enable_debug=1
+enable_debug=0
 
 debug() {
   if [[ $enable_debug == 1 ]]; then
@@ -75,7 +75,7 @@ for file in $files; do
   if [[ -f $file ]]; then
     local_file_hash=$(md5sum "$file" | awk '{ print $1 }')
     remote_file_hash=$(ssh "$host" "if [[ -f "/tmp/$(basename "$file")" ]]; then md5sum /tmp/$(basename "$file"); fi" | awk '{ print $1 }')
-
+    debug "Remote files found."
     if [[ "$local_file_hash" == "$remote_file_hash" ]]; then
       debug "local rc file $file hash matches remote, nothing to copy"
     else
